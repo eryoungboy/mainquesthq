@@ -67,7 +67,7 @@ export default async function AdminDashboard() {
                 <th style={{ padding: "1rem", borderBottom: "var(--border)" }}>Contact</th>
                 <th style={{ padding: "1rem", borderBottom: "var(--border)" }}>Location</th>
                 <th style={{ padding: "1rem", borderBottom: "var(--border)" }}>Age</th>
-                <th style={{ padding: "1rem", borderBottom: "var(--border)" }}>Goal</th>
+
                 <th style={{ padding: "1rem", borderBottom: "var(--border)" }}>Registered</th>
               </tr>
             </thead>
@@ -86,7 +86,7 @@ export default async function AdminDashboard() {
                   </td>
                   <td style={{ padding: "1rem" }}>{reg.city}, {reg.state}</td>
                   <td style={{ padding: "1rem" }}>{reg.ageRange}</td>
-                  <td style={{ padding: "1rem", maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={reg.goal}>{reg.goal}</td>
+
                   <td style={{ padding: "1rem", whiteSpace: "nowrap" }}>
                     {new Date(reg.createdAt).toLocaleDateString()}
                   </td>

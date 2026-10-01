@@ -22,7 +22,6 @@ const registrationSchema = z.object({
   age: z.string().min(1, "Age range is required").max(50),
   city: z.string().min(1, "City is required").max(100),
   state: z.string().min(1, "State is required").max(50),
-  goal: z.string().min(1, "Goal is required").max(400),
   updates: z.enum(["Yes", "No"]),
   source: z.string().max(100).optional(),
   consent: z.literal("on", {
@@ -40,7 +39,6 @@ export async function submitRegistration(formData: FormData) {
       age: formData.get("age"),
       city: formData.get("city"),
       state: formData.get("state"),
-      goal: formData.get("goal"),
       updates: formData.get("updates"),
       source: formData.get("source"),
       consent: formData.get("consent"),
@@ -73,7 +71,6 @@ export async function submitRegistration(formData: FormData) {
       ageRange: validatedData.age,
       city: validatedData.city,
       state: validatedData.state,
-      goal: validatedData.goal,
       wantsUpdates: validatedData.updates === "Yes",
       source: validatedData.source || "",
       consent: true,
@@ -201,14 +198,13 @@ async function sendAdminNotificationEmail(registrationData: any) {
     const adminEmails = admins.map(a => a.email);
     if (adminEmails.length === 0) return;
 
-    const { firstName, lastName, email, phone, city, state, goal } = registrationData;
+    const { firstName, lastName, email, phone, city, state } = registrationData;
     const html = `
       <h2>New Registration for MainQuest</h2>
       <p><strong>Name:</strong> ${firstName} ${lastName}</p>
       <p><strong>Email:</strong> ${email}</p>
       <p><strong>Phone:</strong> ${phone}</p>
       <p><strong>Location:</strong> ${city}, ${state}</p>
-      <p><strong>Goal:</strong> ${goal}</p>
     `;
     
     await resend.emails.send({

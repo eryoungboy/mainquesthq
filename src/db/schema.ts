@@ -25,7 +25,6 @@ export const registrations = pgTable("registrations", {
   ageRange: varchar("age_range", { length: 50 }).notNull(),
   city: varchar("city", { length: 100 }).notNull(),
   state: varchar("state", { length: 50 }).notNull(),
-  goal: text("goal").notNull(),
   wantsUpdates: boolean("wants_updates").notNull().default(false),
   source: varchar("source", { length: 100 }),
   consent: boolean("consent").notNull().default(true),

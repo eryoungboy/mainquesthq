@@ -386,24 +386,7 @@ export default function Home() {
                     </select>
                     <small className="error" aria-live="polite"></small>
                   </div>
-                  <div className="field field-wide">
-                    <label htmlFor="goal">What would you like to get from MainQuest?</label>
-                    <textarea
-                      id="goal"
-                      name="goal"
-                      rows={4}
-                      maxLength={400}
-                      placeholder="A few honest sentences are perfect…"
-                      required
-                      onChange={(e) => setCharCount(e.target.value.length)}
-                    ></textarea>
-                    <div className="field-meta">
-                      <small className="error" aria-live="polite"></small>
-                      <small>
-                        <span id="char-count">{charCount}</span>/400
-                      </small>
-                    </div>
-                  </div>
+
                   <fieldset className="field field-wide choice-field">
                     <legend>Would you like to receive future marketing updates from MainQuest?</legend>
                     <div className="choice-row">
