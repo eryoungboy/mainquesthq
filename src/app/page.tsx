@@ -9,6 +9,7 @@ export default function Home() {
   const [charCount, setCharCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
+  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     // Reveal animations
@@ -325,7 +326,12 @@ export default function Home() {
           </div>
 
           <div className="form-shell reveal">
-            {!isFormSuccess ? (
+            {!showForm ? (
+              <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%", padding: "3rem", textAlign: "center" }}>
+                <p style={{ marginBottom: "2rem", fontSize: "1.2rem", fontWeight: 700 }}>Ready to join us? Fill out the form to secure your spot.</p>
+                <button type="button" className="button button-primary" style={{ width: "100%", maxWidth: "300px", fontSize: "1.2rem", padding: "1rem" }} onClick={() => setShowForm(true)}>Begin Quest</button>
+              </div>
+            ) : !isFormSuccess ? (
               <form id="registration-form" noValidate onSubmit={handleSubmit}>
                 <div className="form-progress">
                   <span>Registration form</span>

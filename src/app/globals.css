@@ -14,7 +14,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--cream); color: var(--black); font-family: Arial, "Helvetica Neue", sans-serif; font-size: 16px; line-height: 1.45; overflow-x: hidden; }
+body { margin: 0; background: var(--white); color: var(--black); font-family: Arial, "Helvetica Neue", sans-serif; font-size: 16px; line-height: 1.45; overflow-x: hidden; }
 a { color: inherit; text-decoration: none; }
 button, input, select, textarea { font: inherit; }
 button, summary, select { cursor: pointer; }
