@@ -10,6 +10,30 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState("");
   const [showForm, setShowForm] = useState(false);
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const eventDate = new Date("2026-10-31T11:00:00-04:00").getTime();
+
+    const interval = setInterval(() => {
+      const now = new Date().getTime();
+      const distance = eventDate - now;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000)
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     // Reveal animations
@@ -134,7 +158,7 @@ export default function Home() {
           <a href="#journey" onClick={handleNavClick} style={{ display: "none" }}>Your journey</a>
           <a href="#faq" onClick={handleNavClick}>FAQs</a>
           <a className="nav-cta" href="#register" onClick={handleNavClick}>
-            Join MainQuest <span aria-hidden="true">↗</span>
+            Register for MainQuest <span aria-hidden="true">↗</span>
           </a>
         </nav>
       </header>
@@ -146,8 +170,7 @@ export default function Home() {
               <span></span> A programme for your next chapter
             </p>
             <h1 id="hero-title">
-              Find your direction.<br />
-              <em>Make your move.</em>
+              Against All Odds
             </h1>
             <p className="hero-intro">
               MainQuest is a practical growth programme for people ready to turn potential into a plan—and a plan into progress.
@@ -160,7 +183,7 @@ export default function Home() {
                 See how it works <span aria-hidden="true">↓</span>
               </a>
             </div>
-            <div className="hero-meta" aria-label="Event details">
+            <div className="hero-meta" aria-label="Event details" style={{ flexWrap: 'wrap' }}>
               <div>
                 <strong>31</strong>
                 <span>October<br />2026</span>
@@ -170,8 +193,31 @@ export default function Home() {
                 <span>AM<br />start</span>
               </div>
               <div>
+                <strong>4</strong>
+                <span>Speakers<br />1 Stage</span>
+              </div>
+              <div>
                 <strong>MA</strong>
                 <span>The Foundry<br />Cambridge</span>
+              </div>
+            </div>
+            
+            <div className="countdown" style={{ display: 'flex', gap: '1.5rem', marginTop: '2rem', padding: '1rem', background: 'var(--yellow)', border: '2px solid var(--black)', borderRadius: '8px', maxWidth: 'max-content' }}>
+              <div style={{ textAlign: 'center' }}>
+                <strong style={{ fontSize: '1.5rem', display: 'block', fontWeight: 900, lineHeight: 1 }}>{timeLeft.days}</strong>
+                <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', fontWeight: 700 }}>Days</span>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <strong style={{ fontSize: '1.5rem', display: 'block', fontWeight: 900, lineHeight: 1 }}>{timeLeft.hours}</strong>
+                <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', fontWeight: 700 }}>Hours</span>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <strong style={{ fontSize: '1.5rem', display: 'block', fontWeight: 900, lineHeight: 1 }}>{timeLeft.minutes}</strong>
+                <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', fontWeight: 700 }}>Mins</span>
+              </div>
+              <div style={{ textAlign: 'center' }}>
+                <strong style={{ fontSize: '1.5rem', display: 'block', fontWeight: 900, lineHeight: 1 }}>{timeLeft.seconds}</strong>
+                <span style={{ fontSize: '0.8rem', textTransform: 'uppercase', fontWeight: 700 }}>Secs</span>
               </div>
             </div>
           </div>
@@ -312,6 +358,7 @@ export default function Home() {
             <div className="event-card" aria-label="Event information">
               <p><span>Date</span><strong>October 31, 2026</strong></p>
               <p><span>Time</span><strong>11:00 AM EST</strong></p>
+              <p><span>Format</span><strong>4 Speakers, 1 Stage</strong></p>
               <p><span>Venue</span><strong>The Foundry<br />101 Rogers St<br />Cambridge, MA 02142</strong></p>
             </div>
             {!showForm && (
@@ -322,7 +369,6 @@ export default function Home() {
             <div className="registration-note">
               <span aria-hidden="true">✓</span>
               <p>
-                <strong>No application fee.</strong><br />
                 We’ll follow up with next steps after reviewing your registration.
               </p>
             </div>
@@ -334,8 +380,9 @@ export default function Home() {
           </div>
 
           {!showForm && (
-            <div className="desktop-begin-quest form-shell" style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%", padding: "3rem", textAlign: "center", background: "transparent", border: "none", boxShadow: "none" }}>
-              <p style={{ marginBottom: "2rem", fontSize: "1.2rem", fontWeight: 700 }}>Ready to join us? Fill out the form to secure your spot.</p>
+            <div className="desktop-begin-quest form-shell" style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%", padding: "3rem", textAlign: "center" }}>
+              <h3 style={{ marginBottom: "1rem", fontSize: "1.5rem", fontWeight: 900 }}>Ready to join us?</h3>
+              <p style={{ marginBottom: "2rem", fontSize: "1.1rem" }}>Fill out the form to secure your spot for <em>Against All Odds</em>.</p>
               <button type="button" className="button button-primary" style={{ width: "100%", maxWidth: "300px", fontSize: "1.2rem", padding: "1rem" }} onClick={() => setShowForm(true)}>Begin Quest</button>
             </div>
           )}
@@ -503,14 +550,6 @@ export default function Home() {
                 The MainQuest team will review your details and contact you with programme dates, participation information, and your next step.
               </p>
             </details>
-            <details>
-              <summary>
-                How much time should I set aside?<span>+</span>
-              </summary>
-              <p>
-                Plan for one live session and a small practical challenge each week. The work is designed to fit alongside school, work, and life.
-              </p>
-            </details>
           </div>
         </section>
       </main>
@@ -527,7 +566,7 @@ export default function Home() {
             <strong>It’s something you build.</strong>
           </p>
           <a className="button button-primary" href="#register">
-            Join the next cohort →
+            Register for MainQuest →
           </a>
         </div>
         <div className="footer-bottom">
