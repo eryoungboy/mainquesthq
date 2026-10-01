@@ -316,6 +316,11 @@ export default function Home() {
               <p><span>Time</span><strong>11:00 AM EST</strong></p>
               <p><span>Venue</span><strong>The Foundry<br />101 Rogers St<br />Cambridge, MA 02142</strong></p>
             </div>
+            {!showForm && (
+              <div className="mobile-begin-quest" style={{ marginTop: "2.5rem", marginBottom: "1.5rem" }}>
+                <button type="button" className="button button-primary" style={{ width: "100%", maxWidth: "300px", fontSize: "1.2rem", padding: "1rem" }} onClick={() => setShowForm(true)}>Begin Quest</button>
+              </div>
+            )}
             <div className="registration-note">
               <span aria-hidden="true">✓</span>
               <p>
@@ -323,17 +328,19 @@ export default function Home() {
                 We’ll follow up with next steps after reviewing your registration.
               </p>
             </div>
-            {!showForm && (
-              <div style={{ marginTop: "2.5rem" }}>
-                <button type="button" className="button button-primary" style={{ width: "100%", maxWidth: "300px", fontSize: "1.2rem", padding: "1rem" }} onClick={() => setShowForm(true)}>Begin Quest</button>
-              </div>
-            )}
             {showForm && (
               <div style={{ marginTop: "2.5rem", padding: "1rem", background: "var(--yellow)", border: "2px solid var(--black)", fontWeight: 900 }}>
                 Please fill the form to secure your spot!
               </div>
             )}
           </div>
+
+          {!showForm && (
+            <div className="desktop-begin-quest form-shell" style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%", padding: "3rem", textAlign: "center", background: "transparent", border: "none", boxShadow: "none" }}>
+              <p style={{ marginBottom: "2rem", fontSize: "1.2rem", fontWeight: 700 }}>Ready to join us? Fill out the form to secure your spot.</p>
+              <button type="button" className="button button-primary" style={{ width: "100%", maxWidth: "300px", fontSize: "1.2rem", padding: "1rem" }} onClick={() => setShowForm(true)}>Begin Quest</button>
+            </div>
+          )}
 
           {showForm && (
             <div className="form-shell">
