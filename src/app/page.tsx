@@ -336,7 +336,7 @@ export default function Home() {
           </div>
 
           {showForm && (
-            <div className="form-shell reveal">
+            <div className="form-shell">
               {!isFormSuccess ? (
               <form id="registration-form" noValidate onSubmit={handleSubmit}>
                 <div className="form-progress">
