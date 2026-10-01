@@ -313,7 +313,7 @@ export default function Home() {
             <p>Tell us a little about yourself. This takes about two minutes, and there are no trick questions.</p>
             <div className="event-card" aria-label="Event information">
               <p><span>Date</span><strong>October 31, 2026</strong></p>
-              <p><span>Time</span><strong>11:00 AM</strong></p>
+              <p><span>Time</span><strong>11:00 AM EST</strong></p>
               <p><span>Venue</span><strong>The Foundry<br />101 Rogers St<br />Cambridge, MA 02142</strong></p>
             </div>
             <div className="registration-note">

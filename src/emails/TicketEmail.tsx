@@ -45,7 +45,7 @@ export const TicketEmail = ({
             <Hr style={hr} />
             <Text style={info}>
               <strong>Date:</strong> 31st October, 2026<br />
-              <strong>Time:</strong> 11:00am<br />
+              <strong>Time:</strong> 11:00am EST<br />
               <strong>Venue:</strong> The Foundry, 101 Rogers St, Cambridge, MA 02142
             </Text>
             {qrCodeDataUri && (

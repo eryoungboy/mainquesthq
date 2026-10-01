@@ -115,9 +115,7 @@ async function sendWelcomeEmail(registrationId: string, email: string, firstName
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mainquesthq.com";
     const ticketUrl = `${baseUrl}/ticket/${ticketToken}`;
 
-    const qrCodeDataUri = await QRCode.toDataURL(ticketUrl, {
-      width: 250, margin: 1, color: { dark: "#000000", light: "#ffffff" }
-    });
+    const qrCodeDataUri = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(ticketUrl)}`;
 
     const { error: icsError, value: icsValue } = ics.createEvent({
       title: "MainQuest",
