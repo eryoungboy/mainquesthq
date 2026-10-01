@@ -121,7 +121,9 @@ async function sendWelcomeEmail(registrationId: string, email: string, firstName
       title: "MainQuest",
       description: `Your ticket reference: ${referenceId}\nTicket URL: ${ticketUrl}`,
       location: "The Foundry, 101 Rogers St, Cambridge, MA 02142",
-      start: [2026, 10, 31, 11, 0], // Oct 31, 2026 at 11am
+      start: [2026, 10, 31, 15, 0], // Oct 31, 2026 at 11am EDT (UTC-4)
+      startInputType: "utc",
+      duration: { hours: 2, minutes: 0 },
       status: "CONFIRMED",
       busyStatus: "BUSY",
     });
