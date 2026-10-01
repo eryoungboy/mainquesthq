@@ -374,8 +374,8 @@ export default function Home() {
                       type="tel"
                       autoComplete="tel"
                       inputMode="tel"
-                      placeholder="+1 (617) 555-0123"
-                      pattern="^\+1[\s.-]?(?:\([2-9][0-9]{2}\)|[2-9][0-9]{2})[\s.-]?[0-9]{3}[\s.-]?[0-9]{4}$"
+                      placeholder="(617) 555-0123"
+                      pattern="^(?:\+?1[\s.-]?)?(?:\([2-9][0-9]{2}\)|[2-9][0-9]{2})[\s.-]?[0-9]{3}[\s.-]?[0-9]{4}$"
                       required
                     />
                     <small className="error" aria-live="polite"></small>
