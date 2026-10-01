@@ -1,0 +1,154 @@
+import {
+  Body,
+  Container,
+  Head,
+  Heading,
+  Hr,
+  Html,
+  Img,
+  Preview,
+  Section,
+  Text,
+} from "@react-email/components";
+import * as React from "react";
+
+interface TicketEmailProps {
+  firstName: string;
+  lastName: string;
+  referenceId: string;
+  ticketUrl: string;
+  qrCodeDataUri: string;
+}
+
+export const TicketEmail = ({
+  firstName = "Explorer",
+  lastName = "",
+  referenceId = "UNKNOWN",
+  ticketUrl = "https://mainquesthq.com",
+  qrCodeDataUri = "",
+}: TicketEmailProps) => {
+  return (
+    <Html>
+      <Head />
+      <Preview>Your ticket to MainQuest is here.</Preview>
+      <Body style={main}>
+        <Container style={container}>
+          <Heading style={h1}>MainQuest</Heading>
+          <Text style={text}>Hi {firstName},</Text>
+          <Text style={text}>
+            Your registration is confirmed. We are excited to see you at the event.
+            Your ticket details are below.
+          </Text>
+          <Section style={ticketCard}>
+            <Text style={kicker}>MainQuest / Ticket</Text>
+            <Heading style={h2}>{firstName.toUpperCase()} {lastName.toUpperCase()}</Heading>
+            <Text style={refId}>REF: {referenceId}</Text>
+            <Hr style={hr} />
+            <Text style={info}>
+              <strong>Date:</strong> October 31, 2026<br />
+              <strong>Time:</strong> 11:00 AM<br />
+              <strong>Venue:</strong> The Foundry, 101 Rogers St, Cambridge, MA 02142
+            </Text>
+            {qrCodeDataUri && (
+              <Section style={{ textAlign: "center", marginTop: "20px" }}>
+                <Img src={qrCodeDataUri} width="150" height="150" alt="Ticket QR" style={{ margin: "0 auto", border: "2px solid #000" }} />
+              </Section>
+            )}
+          </Section>
+          <Text style={text}>
+            You can view your ticket at any time using this link:<br />
+            <a href={ticketUrl} style={link}>{ticketUrl}</a>
+          </Text>
+          <Text style={footer}>
+            MainQuest • Find your direction. Make your move.
+          </Text>
+        </Container>
+      </Body>
+    </Html>
+  );
+};
+
+const main = {
+  backgroundColor: "#f1ecd8",
+  fontFamily: 'Arial, "Helvetica Neue", sans-serif',
+  padding: "40px 0",
+};
+
+const container = {
+  backgroundColor: "#ffffff",
+  border: "2px solid #000000",
+  boxShadow: "6px 6px 0px #fb1422",
+  margin: "0 auto",
+  padding: "40px",
+  maxWidth: "600px",
+};
+
+const h1 = {
+  color: "#000000",
+  fontSize: "24px",
+  fontWeight: "900",
+  letterSpacing: "-0.05em",
+  margin: "0 0 20px 0",
+};
+
+const text = {
+  color: "#000000",
+  fontSize: "16px",
+  lineHeight: "24px",
+  margin: "0 0 20px 0",
+};
+
+const ticketCard = {
+  backgroundColor: "#fedd55",
+  border: "2px solid #000000",
+  boxShadow: "4px 4px 0px #000000",
+  padding: "20px",
+  marginBottom: "30px",
+};
+
+const kicker = {
+  fontSize: "12px",
+  fontWeight: "900",
+  textTransform: "uppercase" as const,
+  letterSpacing: "0.1em",
+  margin: "0 0 10px 0",
+  borderBottom: "1px solid #000",
+  paddingBottom: "5px",
+};
+
+const h2 = {
+  fontSize: "24px",
+  margin: "0 0 5px 0",
+  lineHeight: "1.1",
+};
+
+const refId = {
+  fontSize: "12px",
+  fontWeight: "900",
+  margin: "0",
+};
+
+const hr = {
+  borderColor: "#000000",
+  borderStyle: "dashed",
+  margin: "20px 0",
+};
+
+const info = {
+  fontSize: "14px",
+  lineHeight: "22px",
+  margin: "0",
+};
+
+const link = {
+  color: "#fb1422",
+  fontWeight: "bold",
+  textDecoration: "underline",
+};
+
+const footer = {
+  fontSize: "12px",
+  color: "#555555",
+  marginTop: "40px",
+  textAlign: "center" as const,
+};
