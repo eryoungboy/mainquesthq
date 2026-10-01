@@ -38,9 +38,20 @@ export const TicketEmail = ({
           <Text style={text}>
             Thank you for registering for MainQuest; Against All Odds, We can’t wait to journey with you on this quest together. 
           </Text>
-          <Section style={{ textAlign: "center", marginTop: "20px", marginBottom: "20px" }}>
-            <Img src="cid:ticket" width="400" height="650" alt="MainQuest Ticket" style={{ margin: "0 auto", border: "1px solid #e0e0e0" }} />
+          <Section style={ticketCard}>
+            <Text style={kicker}>MainQuest / Ticket</Text>
+            <Heading style={h2}>{firstName.toUpperCase()} {lastName.toUpperCase()}</Heading>
+            <Text style={refId}>REF: {referenceId}</Text>
+            <Hr style={hr} />
+            <Text style={info}>
+              <strong>Date:</strong> 31st October, 2026<br />
+              <strong>Time:</strong> 11:00am EST<br />
+              <strong>Venue:</strong> The Foundry, 101 Rogers St, Cambridge, MA 02142
+            </Text>
           </Section>
+          <Text style={text}>
+            <em>Your full digital ticket with QR code is attached to this email!</em>
+          </Text>
           <Text style={text}>
             This is also your cue to share with friends so they can join the quest.
           </Text>

@@ -143,8 +143,7 @@ async function sendWelcomeEmail(registrationId: string, email: string, firstName
     attachments.push({
       filename: "MainQuest_Ticket.png",
       content: ticketImageBase64,
-      content_type: "image/png",
-      content_id: "ticket"
+      content_type: "image/png"
     });
 
     const { data, error } = await resend.emails.send({
