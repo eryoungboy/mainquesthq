@@ -9,6 +9,7 @@ import crypto from "crypto";
 import { waitUntil } from "@vercel/functions";
 import { Resend } from "resend";
 import { TicketEmail } from "@/emails/TicketEmail";
+import { generateTicketImage } from "@/lib/ticket-image";
 import QRCode from "qrcode";
 import * as ics from "ics";
 
@@ -135,11 +136,15 @@ async function sendWelcomeEmail(registrationId: string, email: string, firstName
       { filename: "event.ics", content: Buffer.from(icsValue).toString("base64"), content_type: "text/calendar" }
     ] : [];
 
+    const ticketImageResponse = await generateTicketImage(firstName, lastName, referenceId, qrCodeDataUri);
+    const ticketImageBuffer = await ticketImageResponse.arrayBuffer();
+    const ticketImageBase64 = Buffer.from(ticketImageBuffer).toString("base64");
+
     attachments.push({
-      filename: "qrcode.png",
-      content: base64Data,
+      filename: "MainQuest_Ticket.png",
+      content: ticketImageBase64,
       content_type: "image/png",
-      content_id: "qrcode"
+      content_id: "ticket"
     });
 
     const { data, error } = await resend.emails.send({
