@@ -112,9 +112,7 @@ export default function Home() {
     <>
       <header className="site-header" id="top">
         <a className="logo" href="#top" aria-label="MainQuest home">
-          <span>Main</span>
-          <span className="logo-accent">Quest</span>
-          <i aria-hidden="true"></i>
+          <img src="/logo.png" alt="MainQuest" className="logo-image" />
         </a>
         <button
           className="menu-toggle"
