@@ -138,7 +138,7 @@ async function sendWelcomeEmail(registrationId: string, email: string, firstName
     const { data, error } = await resend.emails.send({
       from: process.env.EMAIL_FROM || "MainQuest <hello@mainquesthq.com>",
       to: [email],
-      subject: "Your MainQuest Ticket is Confirmed",
+      subject: "You Have Joined The Quest",
       react: TicketEmail({ firstName, lastName, referenceId, ticketUrl, qrCodeDataUri }),
       attachments,
     });

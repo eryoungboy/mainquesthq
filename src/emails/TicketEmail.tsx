@@ -34,10 +34,9 @@ export const TicketEmail = ({
       <Body style={main}>
         <Container style={container}>
           <Heading style={h1}>MainQuest</Heading>
-          <Text style={text}>Hi {firstName},</Text>
+          <Text style={text}>Hello. {firstName},</Text>
           <Text style={text}>
-            Your registration is confirmed. We are excited to see you at the event.
-            Your ticket details are below.
+            Thank you for registering for MainQuest; Against All Odds, We can’t wait to journey with you on this quest together. 
           </Text>
           <Section style={ticketCard}>
             <Text style={kicker}>MainQuest / Ticket</Text>
@@ -45,8 +44,8 @@ export const TicketEmail = ({
             <Text style={refId}>REF: {referenceId}</Text>
             <Hr style={hr} />
             <Text style={info}>
-              <strong>Date:</strong> October 31, 2026<br />
-              <strong>Time:</strong> 11:00 AM<br />
+              <strong>Date:</strong> 31st October, 2026<br />
+              <strong>Time:</strong> 11:00am<br />
               <strong>Venue:</strong> The Foundry, 101 Rogers St, Cambridge, MA 02142
             </Text>
             {qrCodeDataUri && (
@@ -55,6 +54,10 @@ export const TicketEmail = ({
               </Section>
             )}
           </Section>
+          <Text style={text}>
+            This is also your cue to share with friends so they can join the quest.
+          </Text>
+          <Text style={text}>See you soon!</Text>
           <Text style={text}>
             You can view your ticket at any time using this link:<br />
             <a href={ticketUrl} style={link}>{ticketUrl}</a>
