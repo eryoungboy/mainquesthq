@@ -115,7 +115,10 @@ async function sendWelcomeEmail(registrationId: string, email: string, firstName
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mainquesthq.com";
     const ticketUrl = `${baseUrl}/ticket/${ticketToken}`;
 
-    const qrCodeDataUri = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(ticketUrl)}`;
+    const qrCodeDataUri = await QRCode.toDataURL(ticketUrl, {
+      width: 250, margin: 1, color: { dark: "#000000", light: "#ffffff" }
+    });
+    const base64Data = qrCodeDataUri.split(",")[1];
 
     const { error: icsError, value: icsValue } = ics.createEvent({
       title: "MainQuest",
@@ -128,15 +131,22 @@ async function sendWelcomeEmail(registrationId: string, email: string, firstName
       busyStatus: "BUSY",
     });
 
-    const attachments = icsValue ? [
+    const attachments: any[] = icsValue ? [
       { filename: "event.ics", content: Buffer.from(icsValue).toString("base64"), content_type: "text/calendar" }
     ] : [];
+
+    attachments.push({
+      filename: "qrcode.png",
+      content: base64Data,
+      content_type: "image/png",
+      content_id: "qrcode"
+    });
 
     const { data, error } = await resend.emails.send({
       from: process.env.EMAIL_FROM || "MainQuest <hello@mainquesthq.com>",
       to: [email],
       subject: "You Have Joined The Quest",
-      react: TicketEmail({ firstName, lastName, referenceId, ticketUrl, qrCodeDataUri }),
+      react: TicketEmail({ firstName, lastName, referenceId, ticketUrl, qrCodeDataUri: "cid:qrcode" }),
       attachments,
     });
 
