@@ -355,25 +355,27 @@ export default function Home() {
               Your quest starts <em>right here.</em>
             </h2>
             <p>Tell us a little about yourself. This takes about two minutes, and there are no trick questions.</p>
-            <div className="event-card" aria-label="Event information">
-              <p><span>Date</span><strong>October 31, 2026</strong></p>
-              <p><span>Time</span><strong>11:00 AM EST</strong></p>
-              <p><span>Format</span><strong>4 Speakers, 1 Stage</strong></p>
-              <p><span>Venue</span><strong>The Foundry<br />101 Rogers St<br />Cambridge, MA 02142</strong></p>
+            <div className="desktop-only">
+              <div className="event-card" aria-label="Event information">
+                <p><span>Date</span><strong>October 31, 2026</strong></p>
+                <p><span>Time</span><strong>11:00 AM EST</strong></p>
+                <p><span>Format</span><strong>4 Speakers, 1 Stage</strong></p>
+                <p><span>Venue</span><strong>The Foundry<br />101 Rogers St<br />Cambridge, MA 02142</strong></p>
+              </div>
             </div>
             {!showForm && (
               <div className="mobile-begin-quest" style={{ marginTop: "2.5rem", marginBottom: "1.5rem" }}>
                 <button type="button" className="button button-primary" style={{ width: "100%", maxWidth: "300px", fontSize: "1.2rem", padding: "1rem" }} onClick={() => setShowForm(true)}>Begin Quest</button>
               </div>
             )}
-            <div className="registration-note">
+            <div className="registration-note desktop-only">
               <span aria-hidden="true">✓</span>
               <p>
                 We’ll follow up with next steps after reviewing your registration.
               </p>
             </div>
             {showForm && (
-              <div style={{ marginTop: "2.5rem", padding: "1rem", background: "var(--yellow)", border: "2px solid var(--black)", fontWeight: 900 }}>
+              <div className="mobile-only" style={{ marginTop: "2.5rem", padding: "1rem", background: "var(--yellow)", border: "2px solid var(--black)", fontWeight: 900 }}>
                 Please fill the form to secure your spot!
               </div>
             )}
@@ -513,6 +515,21 @@ export default function Home() {
             )}
           </div>
           )}
+          
+          <div className="mobile-only">
+            <div className="event-card" aria-label="Event information">
+              <p><span>Date</span><strong>October 31, 2026</strong></p>
+              <p><span>Time</span><strong>11:00 AM EST</strong></p>
+              <p><span>Format</span><strong>4 Speakers, 1 Stage</strong></p>
+              <p><span>Venue</span><strong>The Foundry<br />101 Rogers St<br />Cambridge, MA 02142</strong></p>
+            </div>
+            <div className="registration-note">
+              <span aria-hidden="true">✓</span>
+              <p>
+                We’ll follow up with next steps after reviewing your registration.
+              </p>
+            </div>
+          </div>
         </section>
 
         <section className="faq section-pad" id="faq" aria-labelledby="faq-title">

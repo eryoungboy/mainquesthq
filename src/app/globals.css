@@ -224,8 +224,10 @@ details p { max-width: 650px; padding-right: 3rem; }
 
 @media (min-width: 901px) {
   .mobile-begin-quest { display: none !important; }
+  .mobile-only { display: none !important; }
 }
 
 @media (max-width: 900px) {
   .desktop-begin-quest { display: none !important; }
+  .desktop-only { display: none !important; }
 }
