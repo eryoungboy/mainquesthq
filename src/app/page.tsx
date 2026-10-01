@@ -323,15 +323,21 @@ export default function Home() {
                 We’ll follow up with next steps after reviewing your registration.
               </p>
             </div>
-          </div>
-
-          <div className="form-shell reveal">
-            {!showForm ? (
-              <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%", padding: "3rem", textAlign: "center" }}>
-                <p style={{ marginBottom: "2rem", fontSize: "1.2rem", fontWeight: 700 }}>Ready to join us? Fill out the form to secure your spot.</p>
+            {!showForm && (
+              <div style={{ marginTop: "2.5rem" }}>
                 <button type="button" className="button button-primary" style={{ width: "100%", maxWidth: "300px", fontSize: "1.2rem", padding: "1rem" }} onClick={() => setShowForm(true)}>Begin Quest</button>
               </div>
-            ) : !isFormSuccess ? (
+            )}
+            {showForm && (
+              <div style={{ marginTop: "2.5rem", padding: "1rem", background: "var(--yellow)", border: "2px solid var(--black)", fontWeight: 900 }}>
+                Please fill the form to secure your spot!
+              </div>
+            )}
+          </div>
+
+          {showForm && (
+            <div className="form-shell reveal">
+              {!isFormSuccess ? (
               <form id="registration-form" noValidate onSubmit={handleSubmit}>
                 <div className="form-progress">
                   <span>Registration form</span>
@@ -454,6 +460,7 @@ export default function Home() {
               </div>
             )}
           </div>
+          )}
         </section>
 
         <section className="faq section-pad" id="faq" aria-labelledby="faq-title">
