@@ -13,6 +13,7 @@
     "@neon/env": "^1.4.8",
     "@neondatabase/serverless": "^1.1.0",
     "@react-email/components": "^1.0.12",
+    "@react-email/render": "^2.1.0",
     "@vercel/functions": "^3.9.9",
     "bcryptjs": "^3.0.3",
     "dompurify": "^3.4.16",
