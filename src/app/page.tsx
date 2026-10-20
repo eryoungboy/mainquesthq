@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState, FormEvent } from "react";
 import { submitRegistration } from "./actions";
+import Image from "next/image";
+import speakers from "./speakers.json";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -155,6 +157,7 @@ export default function Home() {
           aria-label="Primary navigation"
         >
           <a href="#experience" onClick={handleNavClick}>The experience</a>
+          <a href="#speakers" onClick={handleNavClick}>Speakers</a>
           <a href="#journey" onClick={handleNavClick} style={{ display: "none" }}>Your journey</a>
           <a href="#faq" onClick={handleNavClick}>FAQs</a>
           <a className="nav-cta" href="#register" onClick={handleNavClick}>
@@ -240,7 +243,7 @@ export default function Home() {
             </div>
             <a href="#register" className="stamp" style={{ textDecoration: "none", color: "inherit" }}>
               READY?<br />
-              <span>LET'S GO</span>
+              <span>LET&apos;S GO</span>
             </a>
           </div>
         </section>
@@ -346,6 +349,38 @@ export default function Home() {
           <div className="quote-shape" aria-hidden="true"></div>
         </section>
 
+        <section className="speakers section-pad" id="speakers" aria-labelledby="speakers-title">
+          <div className="speakers-heading reveal">
+            <div className="section-label">
+              <span>02</span> The speakers
+            </div>
+            <h2 id="speakers-title">Meet the people.<br /><em>Hear their stories.</em></h2>
+            <p>Four speakers. One stage. Meet the voices joining us for Against All Odds.</p>
+          </div>
+          <div className="speaker-grid">
+            {speakers.map((speaker, index) => (
+              <article className="speaker-card reveal" key={speaker.id} aria-labelledby={`${speaker.id}-name`}>
+                <div className="speaker-photo">
+                  <Image
+                    src={speaker.image}
+                    alt={`Portrait of ${speaker.name}`}
+                    width={speaker.width}
+                    height={speaker.height}
+                    sizes="(max-width: 700px) 90vw, 42vw"
+                  />
+                  <span className="speaker-number" aria-hidden="true">0{index + 1}</span>
+                </div>
+                <div className="speaker-copy">
+                  <h3 id={`${speaker.id}-name`}>{speaker.name}</h3>
+                  {speaker.bio.map((paragraph, paragraphIndex) => (
+                    <p key={paragraphIndex}>{paragraph}</p>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
         <section className="registration section-pad" id="register" aria-labelledby="register-title">
           <div className="registration-intro reveal">
             <div className="section-label">
@@ -360,6 +395,9 @@ export default function Home() {
                 <p><span>Date</span><strong>October 31, 2026</strong></p>
                 <p><span>Time</span><strong>11:00 AM EST</strong></p>
                 <p><span>Format</span><strong>4 Speakers, 1 Stage</strong></p>
+                <p><span>Speakers</span><strong>{speakers.map((speaker) => (
+                  <a className="event-speaker" key={speaker.id} href={`#${speaker.id}-name`}>{speaker.name}</a>
+                ))}</strong></p>
                 <p><span>Venue</span><strong>The Foundry<br />101 Rogers St<br />Cambridge, MA 02142</strong></p>
               </div>
             </div>
@@ -521,6 +559,9 @@ export default function Home() {
               <p><span>Date</span><strong>October 31, 2026</strong></p>
               <p><span>Time</span><strong>11:00 AM EST</strong></p>
               <p><span>Format</span><strong>4 Speakers, 1 Stage</strong></p>
+              <p><span>Speakers</span><strong>{speakers.map((speaker) => (
+                <a className="event-speaker" key={speaker.id} href={`#${speaker.id}-name`}>{speaker.name}</a>
+              ))}</strong></p>
               <p><span>Venue</span><strong>The Foundry<br />101 Rogers St<br />Cambridge, MA 02142</strong></p>
             </div>
             <div className="registration-note">

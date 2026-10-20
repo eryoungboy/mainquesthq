@@ -1,0 +1,44 @@
+[
+  {
+    "id": "icon-oreoluwa",
+    "name": "Oluwatobiloba ‘Icon’ Oreoluwa",
+    "bio": [
+      "Oluwatobi “Icon” Oreoluwa is a creative entrepreneur, media executive and culture shaper. In 2021 he founded Street Church, which began with a small circle of friends putting scripture into Nigerian pidgin and the slang young people actually use, and sharing it on Twitter and Instagram. What started online has grown into a global community of more than one million people, with outposts in Ghana, Sierra Leone, the UK and Canada. Street Church is built for people who feel distant from traditional church settings and want a way back that feels honest and fun.",
+      "Beyond Street Church, he is the founder of Tasolo NG and Ashtag Team, and has shared his story on platforms including TEDx. Icon’s gift is making serious ideas approachable and helping people feel they belong in the conversation."
+    ],
+    "image": "/speakers/icon-oreoluwa.png",
+    "width": 412,
+    "height": 497
+  },
+  {
+    "id": "ferdy-adimefe",
+    "name": "Ferdy Adimefe",
+    "bio": [
+      "Ferdy Adimefe is a creative entrepreneur, producer and author building Africa’s animation and creative economy. He is the Founder of Magic Carpet, Group MD of Imaginarium which he started in Lagos in 2017. Magic Carpet is an innovation storytelling company committed to putting authentic African stories on the map. The studio is producing an animated adaptation of Cyprian Ekwensi’s classic novel The Passport of Mallam Ilia, working with about 90% Nigerian talent. He serves on the board of Slum2School Africa and is the author of the book Pulse.",
+      "He began his career in advertising as a copywriter, moved into strategy, and became a brand and communications manager before starting his entrepreneurial journey. He was a Ford Foundation inductee in 2010, tasked with creating a blueprint for Nigeria’s next 50 years, and has been named among The Future Awards’ best 100. He is also a member of the International Academy of Television Arts and Sciences, which presents the International Emmy Awards."
+    ],
+    "image": "/speakers/ferdy-adimefe.png",
+    "width": 566,
+    "height": 538
+  },
+  {
+    "id": "alex-oyebade",
+    "name": "Alex Oyebade",
+    "bio": [
+      "Alex Oyebade is the founder of Peercheck, a platform built to bring transparency to the African workplace. Peercheck aims to be the data layer for Africa’s workforce, giving job seekers insight into interviews, company culture and salaries across roles and industries. He writes about transparency, workplace culture and the future of Africa’s workforce, and argues that professionals have long shared this knowledge privately in DMs and WhatsApp groups, with no trusted place to put it. He describes himself as a believer, designer and builder."
+    ],
+    "image": "/speakers/alex-oyebade.png",
+    "width": 301,
+    "height": 400
+  },
+  {
+    "id": "laiza-king",
+    "name": "Laiza King",
+    "bio": [
+      "Laiza King is a social impact and digital strategist, technology enthusiast and youth empowerment advocate working across Africa and the United States. Her public profile lists social impact investment, digital strategy, technology and youth empowerment, along with TEDx speaking and influencing across Africa. She is known for connecting purpose to practical career and impact decisions. She is a development strategist at NYU Africa House and its Center for Technology, Economics, and Development, working on program and impact management, early-stage impact investing, child safety and youth development, and the founder of The Safety Chic, a social enterprise creating African-themed safety education products."
+    ],
+    "image": "/speakers/laiza-king.png",
+    "width": 380,
+    "height": 470
+  }
+]

@@ -73,6 +73,26 @@ h1 em, h2 em { display: inline-block; color: var(--red); font-family: Georgia, s
 .section-label { display: flex; align-items: center; gap: .7rem; text-transform: uppercase; letter-spacing: .14em; font-size: .7rem; font-weight: 900; }
 .section-label span { display: grid; place-content: center; width: 32px; height: 32px; border: 1px solid; border-radius: 50%; letter-spacing: 0; }
 .section-label.light { color: var(--white); }
+.speakers { background: var(--cream); border-bottom: var(--border); }
+.speakers-heading { max-width: 850px; margin-bottom: 3rem; }
+.speakers h2 { margin: 2.5rem 0 1.5rem; font-size: clamp(3rem, 5.7vw, 6rem); line-height: .9; letter-spacing: -.07em; }
+.speakers-heading > p { max-width: 560px; font-size: 1.1rem; }
+.speaker-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(1.5rem, 3vw, 3rem); align-items: start; }
+.speaker-card { min-width: 0; border: var(--border); background: var(--white); box-shadow: 6px 6px 0 var(--black); }
+.speaker-photo { position: relative; background: var(--yellow); border-bottom: var(--border); }
+.speaker-photo img { display: block; width: 100%; height: clamp(280px, 32vw, 440px); object-fit: contain; }
+.speaker-card:nth-child(2) .speaker-photo { background: var(--cyan); }
+.speaker-card:nth-child(3) .speaker-photo { background: var(--red); }
+.speaker-card:nth-child(4) .speaker-photo { background: var(--navy); }
+.speaker-number { position: absolute; bottom: 1rem; left: 1rem; display: grid; place-items: center; width: 42px; height: 42px; background: var(--white); border: var(--border); font-weight: 900; }
+.speaker-copy { padding: clamp(1.25rem, 3vw, 2.5rem); }
+.speaker-copy h3 { font-size: clamp(1.6rem, 2.6vw, 2.5rem); line-height: 1.05; letter-spacing: -.045em; margin-bottom: 1.25rem; }
+.speaker-copy p { line-height: 1.65; }
+.speaker-copy p:last-child { margin-bottom: 0; }
+@media (max-width: 700px) {
+  .speaker-grid { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .speaker-photo img { height: 360px; object-fit: cover; object-position: center top; }
+}
 .manifesto { display: grid; grid-template-columns: .45fr 1.4fr; align-items: start; gap: 3rem; background: var(--white); border-bottom: var(--border); }
 .manifesto-content { max-width: 870px; }
 .manifesto-lead { margin-bottom: 2rem; font-size: clamp(2.3rem, 5vw, 5.2rem); line-height: .98; font-weight: 900; letter-spacing: -.065em; }
@@ -115,6 +135,9 @@ blockquote footer { margin-top: 2rem; font-size: .75rem; letter-spacing: .08em; 
 .event-card p:last-child { border-bottom: 0; }
 .event-card span { padding-top: .15rem; color: var(--red); font-size: .66rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
 .event-card strong { line-height: 1.35; }
+.event-speaker { display: block; }
+.event-speaker + .event-speaker { margin-top: .4rem; }
+.event-speaker:hover, .event-speaker:focus-visible { text-decoration: underline; }
 .registration-note { display: flex; gap: 1rem; max-width: 460px; margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid; }
 .registration-note > span { display: grid; place-content: center; flex: 0 0 34px; height: 34px; background: var(--yellow); border: 1px solid; border-radius: 50%; font-weight: 900; }
 .form-shell { min-height: 650px; background: var(--white); border: var(--border); box-shadow: 12px 12px 0 var(--red); }
