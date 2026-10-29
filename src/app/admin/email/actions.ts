@@ -6,37 +6,52 @@ import { Resend } from "resend";
 const resend = new Resend(process.env.RESEND_API_KEY || "re_123");
 
 function wrapBroadcastEmailHtml(contentHtml: string): string {
+  // In HTML emails, desktop webmail (especially Gmail) strips <style> tags in <head>.
+  // We must inline max-width, width, and height directly onto all <img> tags so they never bleed out of the 600px container.
+  const inlinedContent = contentHtml.replace(/<img\b([^>]*)>/gi, (match, attrs) => {
+    if (/style=["']/i.test(attrs)) {
+      return match.replace(
+        /style=["']([^"']*)["']/i,
+        'style="max-width:100% !important; width:100% !important; height:auto !important; display:block; margin:20px auto; border-radius:4px; border:1px solid #000000; box-shadow:4px 4px 0px #000000; $1"'
+      );
+    }
+    return `<img ${attrs} style="max-width:100% !important; width:100% !important; height:auto !important; display:block; margin:20px auto; border-radius:4px; border:1px solid #000000; box-shadow:4px 4px 0px #000000;" />`;
+  });
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MainQuest</title>
-  <style>
-    body { margin: 0; padding: 0; background-color: #f1ecd8; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: #111111; }
-    .email-container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border: 2px solid #000000; box-shadow: 6px 6px 0px #fb1422; padding: 32px; box-sizing: border-box; }
-    .email-header { font-size: 24px; font-weight: 900; letter-spacing: -0.05em; color: #000000; margin-bottom: 24px; border-bottom: 2px solid #f1ecd8; padding-bottom: 12px; }
-    .email-body { font-size: 16px; line-height: 1.6; color: #111111; }
-    .email-body p { margin: 0 0 16px 0; }
-    .email-body img { max-width: 100%; height: auto; display: block; margin: 20px auto; border-radius: 4px; border: 1px solid #000000; box-shadow: 4px 4px 0px #000000; }
-    .email-body a { color: #fb1422; text-decoration: underline; font-weight: bold; }
-    .email-body blockquote { border-left: 4px solid #fb1422; margin: 16px 0; padding-left: 16px; color: #555555; }
-    .email-footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; font-size: 12px; line-height: 1.5; color: #666666; text-align: center; }
-  </style>
 </head>
-<body style="margin: 0; padding: 20px 10px; background-color: #f1ecd8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #111111;">
-  <div style="max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 2px solid #000000; box-shadow: 6px 6px 0px #fb1422; padding: 32px; box-sizing: border-box;">
-    <div style="font-size: 24px; font-weight: 900; letter-spacing: -0.05em; color: #000000; margin-bottom: 24px; border-bottom: 2px solid #f1ecd8; padding-bottom: 12px;">
-      MainQuest
-    </div>
-    <div style="font-size: 16px; line-height: 1.6; color: #111111;">
-      ${contentHtml}
-    </div>
-    <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; font-size: 12px; line-height: 1.5; color: #666666; text-align: center;">
-      <p style="margin: 0 0 4px 0;">MainQuest • Find your direction. Make your move.</p>
-      <p style="margin: 0; color: #999999;">You received this email because you registered for MainQuest.</p>
-    </div>
-  </div>
+<body style="margin: 0; padding: 0; background-color: #f1ecd8; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #111111; -webkit-font-smoothing: antialiased;">
+  <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="background-color: #f1ecd8; width: 100% !important; padding: 30px 10px;">
+    <tr>
+      <td align="center">
+        <!-- Main Card Container (standard 600px email width) -->
+        <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="max-width: 600px; width: 100%; background-color: #ffffff; border: 2px solid #000000; box-shadow: 6px 6px 0px #fb1422; text-align: left;">
+          <tr>
+            <td style="padding: 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+              <!-- Header -->
+              <div style="font-size: 24px; font-weight: 900; letter-spacing: -0.05em; color: #000000; margin-bottom: 24px; border-bottom: 2px solid #f1ecd8; padding-bottom: 12px;">
+                MainQuest
+              </div>
+              <!-- Dynamic Body Content -->
+              <div style="font-size: 16px; line-height: 1.6; color: #111111;">
+                ${inlinedContent}
+              </div>
+              <!-- Footer -->
+              <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid #e5e5e5; font-size: 12px; line-height: 1.5; color: #666666; text-align: center;">
+                <p style="margin: 0 0 4px 0;">MainQuest • Find your direction. Make your move.</p>
+                <p style="margin: 0; color: #999999;">You received this email because you registered for MainQuest.</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`;
 }

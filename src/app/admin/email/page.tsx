@@ -240,6 +240,7 @@ export default function EmailBroadcastPage() {
               </div>
 
               <div style={{ background: "var(--white)", border: "2px solid var(--black)", overflow: "hidden" }}>
+                <style dangerouslySetInnerHTML={{ __html: `.ql-editor img { max-width: 100%; height: auto; display: block; margin: 16px auto; border-radius: 4px; border: 1px solid #000; box-shadow: 4px 4px 0px #000; }` }} />
                 {/* @ts-ignore - ReactQuill dynamic import ref */}
                 <ReactQuill 
                   ref={quillRef}
