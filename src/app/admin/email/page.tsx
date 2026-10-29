@@ -18,9 +18,10 @@ export default function EmailBroadcastPage() {
     if (quillRef.current) {
       const editor = quillRef.current.getEditor();
       const range = editor.getSelection();
-      let position = range ? range.index : editor.getLength();
+      const position = range ? range.index : editor.getLength();
       editor.insertText(position, placeholder);
       editor.setSelection(position + placeholder.length);
+      setMessageHtml(editor.root.innerHTML);
     } else {
       setMessageHtml(prev => prev + placeholder);
     }
@@ -50,7 +51,30 @@ export default function EmailBroadcastPage() {
         </div>
 
         <div className="form-shell" style={{ maxWidth: "800px", padding: "2.5rem", minHeight: "auto", boxShadow: "8px 8px 0 var(--navy)" }}>
-          <form action={broadcastAction}>
+          <form 
+            action={broadcastAction}
+            onSubmit={(e) => {
+              if (quillRef.current) {
+                const editor = quillRef.current.getEditor();
+                const currentHtml = editor.root.innerHTML;
+                setMessageHtml(currentHtml);
+                const hiddenInput = e.currentTarget.querySelector('input[name="messageHtml"]') as HTMLInputElement;
+                if (hiddenInput) {
+                  hiddenInput.value = currentHtml;
+                }
+                const textContent = editor.getText().trim();
+                if (!textContent && (currentHtml === "<p><br></p>" || !currentHtml)) {
+                  alert("Please enter email content before sending.");
+                  e.preventDefault();
+                  return;
+                }
+              }
+              const confirmed = window.confirm("Are you sure you want to send this email blast to all selected recipients?");
+              if (!confirmed) {
+                e.preventDefault();
+              }
+            }}
+          >
             <input type="hidden" name="messageHtml" value={messageHtml} />
             
             <fieldset className="field choice-field field-wide" style={{ marginBottom: "1.5rem" }}>
@@ -94,7 +118,7 @@ export default function EmailBroadcastPage() {
                       [{ 'header': [1, 2, 3, false] }],
                       ['bold', 'italic', 'underline', 'strike', 'blockquote'],
                       [{'list': 'ordered'}, {'list': 'bullet'}],
-                      ['link', 'image', 'video'],
+                      ['link', 'image'],
                       ['clean']
                     ],
                   }}
@@ -115,7 +139,7 @@ export default function EmailBroadcastPage() {
             )}
 
             <button className="button button-submit" type="submit" disabled={isBroadcasting}>
-              {isBroadcasting ? "Queueing Emails..." : "Send Email Blast"} ↗
+              {isBroadcasting ? "Sending Email Blast..." : "Send Email Blast"} ↗
             </button>
           </form>
         </div>
