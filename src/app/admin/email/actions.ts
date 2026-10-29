@@ -41,101 +41,174 @@ function wrapBroadcastEmailHtml(contentHtml: string): string {
 </html>`;
 }
 
-export async function sendEmailBroadcastAction(prevState: any, formData: FormData) {
-  const messageHtml = formData.get("messageHtml")?.toString();
-  const audience = formData.get("audience")?.toString();
-  const emailSubject = formData.get("emailSubject")?.toString();
+export async function sendTestEmailAction(prevState: any, formData: FormData) {
+  try {
+    const testEmail = formData.get("testEmail")?.toString().trim().toLowerCase();
+    const messageHtml = formData.get("messageHtml")?.toString();
+    const emailSubject = formData.get("emailSubject")?.toString();
 
-  if (!messageHtml || messageHtml === "<p><br></p>" || messageHtml.trim() === "") {
-    return { error: "Email content is required." };
-  }
-  if (!emailSubject || emailSubject.trim() === "") {
-    return { error: "Email subject is required." };
-  }
+    if (!testEmail || !testEmail.includes("@")) {
+      return { error: "Please enter a valid email address for testing." };
+    }
+    if (!messageHtml || messageHtml === "<p><br></p>" || messageHtml.trim() === "") {
+      return { error: "Email content is required before sending a test." };
+    }
+    if (!emailSubject || emailSubject.trim() === "") {
+      return { error: "Email subject is required before sending a test." };
+    }
 
-  const allRegistrations = await db.select().from(registrations);
-  const targets = audience === "marketing" 
-    ? allRegistrations.filter(r => r.wantsUpdates)
-    : allRegistrations;
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mainquesthq.com";
+    const fromEmail = process.env.EMAIL_FROM || "MainQuest <hello@mainquesthq.com>";
 
-  if (targets.length === 0) return { error: "No recipients found for this audience." };
+    let personalizedHtml = messageHtml;
+    personalizedHtml = personalizedHtml.replace(/\{\{firstName\}\}/gi, "Tester");
+    personalizedHtml = personalizedHtml.replace(/\{\{lastName\}\}/gi, "Admin");
+    personalizedHtml = personalizedHtml.replace(/\{\{email\}\}/gi, testEmail);
+    personalizedHtml = personalizedHtml.replace(/\{\{ticketToken\}\}/gi, "SAMPLE-TICKET-TOKEN");
+    personalizedHtml = personalizedHtml.replace(/\{\{ticketUrl\}\}/gi, `${baseUrl}/ticket/sample`);
 
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mainquesthq.com";
-  const fromEmail = process.env.EMAIL_FROM || "MainQuest <hello@mainquesthq.com>";
-
-  const CHUNK_SIZE = 100;
-  let sentCount = 0;
-  let failCount = 0;
-  const errorMessages: string[] = [];
-
-  for (let i = 0; i < targets.length; i += CHUNK_SIZE) {
-    const chunk = targets.slice(i, i + CHUNK_SIZE);
-
-    const emailBatch = chunk.map(reg => {
-      let personalizedHtml = messageHtml;
-      personalizedHtml = personalizedHtml.replace(/\{\{firstName\}\}/gi, reg.firstName);
-      personalizedHtml = personalizedHtml.replace(/\{\{lastName\}\}/gi, reg.lastName);
-      personalizedHtml = personalizedHtml.replace(/\{\{email\}\}/gi, reg.email);
-      personalizedHtml = personalizedHtml.replace(/\{\{ticketToken\}\}/gi, reg.ticketToken);
-      personalizedHtml = personalizedHtml.replace(/\{\{ticketUrl\}\}/gi, `${baseUrl}/ticket/${reg.ticketToken}`);
-
-      return {
-        from: fromEmail,
-        to: [reg.email],
-        subject: emailSubject,
-        html: wrapBroadcastEmailHtml(personalizedHtml),
-      };
+    const { data, error } = await resend.emails.send({
+      from: fromEmail,
+      to: [testEmail],
+      subject: `[TEST] ${emailSubject}`,
+      html: wrapBroadcastEmailHtml(personalizedHtml),
     });
 
-    try {
-      const res = await resend.batch.send(emailBatch, { batchValidation: "permissive" });
+    if (error) {
+      return { error: `Resend error: ${error.message}` };
+    }
 
-      if (res.error) {
-        errorMessages.push(res.error.message);
+    return { success: `Test email successfully sent to ${testEmail}! (ID: ${data?.id})` };
+  } catch (err: any) {
+    console.error("Test email error:", err);
+    return { error: err.message || "Failed to send test email." };
+  }
+}
+
+export async function sendEmailBroadcastAction(prevState: any, formData: FormData) {
+  try {
+    const messageHtml = formData.get("messageHtml")?.toString();
+    const audience = formData.get("audience")?.toString();
+    const emailSubject = formData.get("emailSubject")?.toString();
+
+    if (!messageHtml || messageHtml === "<p><br></p>" || messageHtml.trim() === "") {
+      return { error: "Email content is required." };
+    }
+    if (!emailSubject || emailSubject.trim() === "") {
+      return { error: "Email subject is required." };
+    }
+
+    const allRegistrations = await db.select().from(registrations);
+    const targets = audience === "marketing" 
+      ? allRegistrations.filter(r => r.wantsUpdates)
+      : allRegistrations;
+
+    if (targets.length === 0) return { error: "No recipients found for this audience." };
+
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://mainquesthq.com";
+    const fromEmail = process.env.EMAIL_FROM || "MainQuest <hello@mainquesthq.com>";
+
+    const CHUNK_SIZE = 100;
+    let sentCount = 0;
+    let failCount = 0;
+    const errorMessages: string[] = [];
+
+    for (let i = 0; i < targets.length; i += CHUNK_SIZE) {
+      const chunk = targets.slice(i, i + CHUNK_SIZE);
+
+      const emailBatch = chunk.map(reg => {
+        let personalizedHtml = messageHtml;
+        personalizedHtml = personalizedHtml.replace(/\{\{firstName\}\}/gi, reg.firstName);
+        personalizedHtml = personalizedHtml.replace(/\{\{lastName\}\}/gi, reg.lastName);
+        personalizedHtml = personalizedHtml.replace(/\{\{email\}\}/gi, reg.email);
+        personalizedHtml = personalizedHtml.replace(/\{\{ticketToken\}\}/gi, reg.ticketToken);
+        personalizedHtml = personalizedHtml.replace(/\{\{ticketUrl\}\}/gi, `${baseUrl}/ticket/${reg.ticketToken}`);
+
+        return {
+          from: fromEmail,
+          to: [reg.email],
+          subject: emailSubject,
+          html: wrapBroadcastEmailHtml(personalizedHtml),
+        };
+      });
+
+      try {
+        const res = await resend.batch.send(emailBatch, { batchValidation: "permissive" });
+
+        if (res.error) {
+          errorMessages.push(res.error.message);
+          failCount += chunk.length;
+
+          const failureLogs = chunk.map(reg => ({
+            registrationId: reg.id,
+            type: "broadcast_email" as const,
+            status: "failed" as const,
+            errorMessage: res.error?.message || "Batch send error",
+          }));
+          await db.insert(communicationsLog).values(failureLogs);
+        } else {
+          const returnedData = res.data?.data || [];
+          const returnedErrors = (res.data as any)?.errors || [];
+
+          const errorByIndex = new Map<number, string>();
+          for (const err of returnedErrors) {
+            errorByIndex.set(err.index, err.message);
+            errorMessages.push(err.message);
+          }
+
+          const logsToInsert: any[] = [];
+          chunk.forEach((reg, idx) => {
+            const err = errorByIndex.get(idx);
+            if (err) {
+              failCount++;
+              logsToInsert.push({
+                registrationId: reg.id,
+                type: "broadcast_email" as const,
+                status: "failed" as const,
+                errorMessage: err,
+              });
+            } else {
+              sentCount++;
+              logsToInsert.push({
+                registrationId: reg.id,
+                type: "broadcast_email" as const,
+                status: "sent" as const,
+                providerId: returnedData[idx]?.id || null,
+              });
+            }
+          });
+
+          if (logsToInsert.length > 0) {
+            await db.insert(communicationsLog).values(logsToInsert);
+          }
+        }
+      } catch (batchErr: any) {
+        errorMessages.push(batchErr.message || "Failed to send batch");
         failCount += chunk.length;
 
         const failureLogs = chunk.map(reg => ({
           registrationId: reg.id,
           type: "broadcast_email" as const,
           status: "failed" as const,
-          errorMessage: res.error?.message || "Batch send error",
+          errorMessage: batchErr.message || "Unexpected exception during send",
         }));
         await db.insert(communicationsLog).values(failureLogs);
-      } else {
-        const returnedIds = res.data?.data || [];
-        sentCount += chunk.length;
-
-        const successLogs = chunk.map((reg, idx) => ({
-          registrationId: reg.id,
-          type: "broadcast_email" as const,
-          status: "sent" as const,
-          providerId: returnedIds[idx]?.id || null,
-        }));
-        await db.insert(communicationsLog).values(successLogs);
       }
-    } catch (batchErr: any) {
-      errorMessages.push(batchErr.message || "Failed to send batch");
-      failCount += chunk.length;
-
-      const failureLogs = chunk.map(reg => ({
-        registrationId: reg.id,
-        type: "broadcast_email" as const,
-        status: "failed" as const,
-        errorMessage: batchErr.message || "Unexpected exception during send",
-      }));
-      await db.insert(communicationsLog).values(failureLogs);
     }
-  }
 
-  if (failCount > 0 && sentCount === 0) {
-    return { error: `Failed to send broadcast: ${errorMessages.join("; ")}` };
-  }
+    if (failCount > 0 && sentCount === 0) {
+      return { error: `Failed to send broadcast: ${errorMessages.slice(0, 3).join("; ")}` };
+    }
 
-  if (failCount > 0) {
-    return {
-      success: `Sent to ${sentCount} recipient(s), but ${failCount} failed: ${errorMessages.join("; ")}`,
-    };
-  }
+    if (failCount > 0) {
+      return {
+        success: `Sent to ${sentCount} recipient(s), but ${failCount} failed: ${errorMessages.slice(0, 3).join("; ")}`,
+      };
+    }
 
-  return { success: `Successfully sent email blast to ${sentCount} recipient(s)!` };
+    return { success: `Successfully sent email blast to all ${sentCount} recipient(s)!` };
+  } catch (err: any) {
+    console.error("sendEmailBroadcastAction fatal error:", err);
+    return { error: err.message || "An unexpected error occurred while sending the broadcast." };
+  }
 }

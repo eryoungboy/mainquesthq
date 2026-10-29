@@ -1,29 +1,131 @@
 "use client";
 
-import { useState, useActionState, useRef } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { signOutAction } from "../actions";
-import { sendEmailBroadcastAction } from "@/app/admin/email/actions";
+import { sendEmailBroadcastAction, sendTestEmailAction } from "@/app/admin/email/actions";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false, loading: () => <p>Loading editor...</p> }) as any;
 
 export default function EmailBroadcastPage() {
-  const [broadcastState, broadcastAction, isBroadcasting] = useActionState(sendEmailBroadcastAction, undefined as any);
+  const [emailSubject, setEmailSubject] = useState("");
   const [messageHtml, setMessageHtml] = useState("");
+  const [audience, setAudience] = useState<"marketing" | "all">("all");
+  const [testEmail, setTestEmail] = useState("getclearwithdivine@gmail.com");
+
+  const [isTesting, setIsTesting] = useState(false);
+  const [testStatus, setTestStatus] = useState<{ success?: string; error?: string } | null>(null);
+
+  const [isBroadcasting, setIsBroadcasting] = useState(false);
+  const [broadcastStatus, setBroadcastStatus] = useState<{ success?: string; error?: string } | null>(null);
+
   const quillRef = useRef<any>(null);
+
+  const getLiveHtml = () => {
+    if (quillRef.current) {
+      try {
+        const editor = quillRef.current.getEditor();
+        return editor.root.innerHTML;
+      } catch (e) {
+        // Fallback to state
+      }
+    }
+    return messageHtml;
+  };
 
   const insertPlaceholder = (placeholder: string) => {
     if (quillRef.current) {
-      const editor = quillRef.current.getEditor();
-      const range = editor.getSelection();
-      const position = range ? range.index : editor.getLength();
-      editor.insertText(position, placeholder);
-      editor.setSelection(position + placeholder.length);
-      setMessageHtml(editor.root.innerHTML);
-    } else {
-      setMessageHtml(prev => prev + placeholder);
+      try {
+        const editor = quillRef.current.getEditor();
+        const range = editor.getSelection();
+        const position = range ? range.index : editor.getLength();
+        editor.insertText(position, placeholder);
+        editor.setSelection(position + placeholder.length);
+        const html = editor.root.innerHTML;
+        setMessageHtml(html);
+        return;
+      } catch (e) {
+        // Fallback
+      }
+    }
+    setMessageHtml(prev => prev + placeholder);
+  };
+
+  const handleSendTest = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    setTestStatus(null);
+
+    const email = testEmail.trim();
+    if (!email || !email.includes("@")) {
+      setTestStatus({ error: "Please enter a valid test email address." });
+      return;
+    }
+
+    const liveHtml = getLiveHtml();
+    setMessageHtml(liveHtml);
+
+    if (!liveHtml || liveHtml === "<p><br></p>" || liveHtml.trim() === "") {
+      setTestStatus({ error: "Please write email content before sending a test." });
+      return;
+    }
+
+    if (!emailSubject.trim()) {
+      setTestStatus({ error: "Please enter an email subject before sending a test." });
+      return;
+    }
+
+    setIsTesting(true);
+    try {
+      const formData = new FormData();
+      formData.append("testEmail", email);
+      formData.append("emailSubject", emailSubject.trim());
+      formData.append("messageHtml", liveHtml);
+
+      const res = await sendTestEmailAction(null, formData);
+      setTestStatus(res);
+    } catch (err: any) {
+      setTestStatus({ error: err.message || "Failed to send test email." });
+    } finally {
+      setIsTesting(false);
+    }
+  };
+
+  const handleSendBroadcast = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBroadcastStatus(null);
+
+    const liveHtml = getLiveHtml();
+    setMessageHtml(liveHtml);
+
+    if (!liveHtml || liveHtml === "<p><br></p>" || liveHtml.trim() === "") {
+      setBroadcastStatus({ error: "Please write email content before sending." });
+      return;
+    }
+
+    if (!emailSubject.trim()) {
+      setBroadcastStatus({ error: "Please enter an email subject." });
+      return;
+    }
+
+    const audienceLabel = audience === "marketing" ? "Marketing Opt-ins" : "All Registrants";
+    const confirmed = window.confirm(`Are you sure you want to send this broadcast email to "${audienceLabel}"?`);
+    if (!confirmed) return;
+
+    setIsBroadcasting(true);
+    try {
+      const formData = new FormData();
+      formData.append("audience", audience);
+      formData.append("emailSubject", emailSubject.trim());
+      formData.append("messageHtml", liveHtml);
+
+      const res = await sendEmailBroadcastAction(null, formData);
+      setBroadcastStatus(res);
+    } catch (err: any) {
+      setBroadcastStatus({ error: err.message || "An unexpected error occurred while sending." });
+    } finally {
+      setIsBroadcasting(false);
     }
   };
 
@@ -51,49 +153,18 @@ export default function EmailBroadcastPage() {
         </div>
 
         <div className="form-shell" style={{ maxWidth: "800px", padding: "2.5rem", minHeight: "auto", boxShadow: "8px 8px 0 var(--navy)" }}>
-          <form 
-            action={broadcastAction}
-            onSubmit={(e) => {
-              if (quillRef.current) {
-                const editor = quillRef.current.getEditor();
-                const currentHtml = editor.root.innerHTML;
-                setMessageHtml(currentHtml);
-                const hiddenInput = e.currentTarget.querySelector('input[name="messageHtml"]') as HTMLInputElement;
-                if (hiddenInput) {
-                  hiddenInput.value = currentHtml;
-                }
-                const textContent = editor.getText().trim();
-                if (!textContent && (currentHtml === "<p><br></p>" || !currentHtml)) {
-                  alert("Please enter email content before sending.");
-                  e.preventDefault();
-                  return;
-                }
-              }
-              const confirmed = window.confirm("Are you sure you want to send this email blast to all selected recipients?");
-              if (!confirmed) {
-                e.preventDefault();
-              }
-            }}
-          >
-            <input type="hidden" name="messageHtml" value={messageHtml} />
-            
-            <fieldset className="field choice-field field-wide" style={{ marginBottom: "1.5rem" }}>
-              <legend style={{ fontSize: "1rem" }}>Who should receive this email?</legend>
-              <div className="choice-row">
-                <label>
-                  <input type="radio" name="audience" value="marketing" required />
-                  <span>Marketing Opt-ins</span>
-                </label>
-                <label>
-                  <input type="radio" name="audience" value="all" required defaultChecked />
-                  <span>All Registrants (Updates)</span>
-                </label>
-              </div>
-            </fieldset>
-
+          <form onSubmit={handleSendBroadcast} method="POST">
             <div className="field field-wide" style={{ marginBottom: "1.5rem" }}>
               <label htmlFor="emailSubject">Email Subject</label>
-              <input id="emailSubject" name="emailSubject" type="text" placeholder="e.g., Get ready for MainQuest!" required />
+              <input 
+                id="emailSubject" 
+                name="emailSubject" 
+                type="text" 
+                value={emailSubject}
+                onChange={(e) => setEmailSubject(e.target.value)}
+                placeholder="e.g., Get ready for MainQuest!" 
+                required 
+              />
             </div>
 
             <div className="field field-wide" style={{ marginBottom: "1.5rem" }}>
@@ -106,7 +177,7 @@ export default function EmailBroadcastPage() {
                 </div>
               </div>
               <div style={{ background: "var(--white)", border: "2px solid var(--black)", overflow: "hidden" }}>
-                {/* @ts-ignore - ReactQuill dynamic import ref issue */}
+                {/* @ts-ignore - ReactQuill dynamic import ref */}
                 <ReactQuill 
                   ref={quillRef}
                   theme="snow" 
@@ -126,20 +197,90 @@ export default function EmailBroadcastPage() {
               </div>
             </div>
 
-            {broadcastState?.error && (
+            {/* TEST EMAIL CARD */}
+            <div style={{ background: "#fdf8ee", border: "2px dashed var(--black)", padding: "1.25rem", marginBottom: "2rem" }}>
+              <strong style={{ display: "block", marginBottom: "0.5rem", fontSize: "0.95rem" }}>
+                Send a Test Email (Preview in Inbox)
+              </strong>
+              <p style={{ fontSize: "0.85rem", color: "#555", margin: "0 0 1rem 0" }}>
+                Send a preview to your own email address to check the layout and formatting before blasting all recipients.
+              </p>
+              <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>
+                <input 
+                  type="email"
+                  value={testEmail}
+                  onChange={(e) => setTestEmail(e.target.value)}
+                  placeholder="admin@example.com"
+                  style={{ flex: "1 1 240px", padding: "0.6rem 0.8rem", border: "2px solid var(--black)", background: "var(--white)" }}
+                />
+                <button 
+                  type="button" 
+                  onClick={handleSendTest}
+                  disabled={isTesting || isBroadcasting}
+                  className="button"
+                  style={{ background: "var(--navy)", color: "var(--white)", padding: "0.6rem 1.2rem", fontSize: "0.85rem", cursor: "pointer" }}
+                >
+                  {isTesting ? "Sending Test..." : "Send Test Email"}
+                </button>
+              </div>
+
+              {testStatus?.error && (
+                <div style={{ color: "var(--red)", marginTop: "0.75rem", fontWeight: "bold", fontSize: "0.85rem" }}>
+                  ⚠️ {testStatus.error}
+                </div>
+              )}
+              {testStatus?.success && (
+                <div style={{ color: "var(--green)", marginTop: "0.75rem", fontWeight: "bold", fontSize: "0.85rem" }}>
+                  ✅ {testStatus.success}
+                </div>
+              )}
+            </div>
+
+            {/* AUDIENCE SELECTOR */}
+            <fieldset className="field choice-field field-wide" style={{ marginBottom: "1.5rem" }}>
+              <legend style={{ fontSize: "1rem" }}>Who should receive this broadcast?</legend>
+              <div className="choice-row">
+                <label>
+                  <input 
+                    type="radio" 
+                    name="audience" 
+                    value="marketing" 
+                    checked={audience === "marketing"}
+                    onChange={() => setAudience("marketing")}
+                  />
+                  <span>Marketing Opt-ins</span>
+                </label>
+                <label>
+                  <input 
+                    type="radio" 
+                    name="audience" 
+                    value="all" 
+                    checked={audience === "all"}
+                    onChange={() => setAudience("all")}
+                  />
+                  <span>All Registrants (Updates)</span>
+                </label>
+              </div>
+            </fieldset>
+
+            {broadcastStatus?.error && (
               <div className="form-error-banner" style={{ color: "var(--red)", marginBottom: "1rem", fontWeight: "bold" }}>
-                {broadcastState.error}
+                ⚠️ {broadcastStatus.error}
               </div>
             )}
             
-            {broadcastState?.success && (
+            {broadcastStatus?.success && (
               <div className="form-error-banner" style={{ color: "var(--green)", marginBottom: "1rem", fontWeight: "bold" }}>
-                {broadcastState.success}
+                ✅ {broadcastStatus.success}
               </div>
             )}
 
-            <button className="button button-submit" type="submit" disabled={isBroadcasting}>
-              {isBroadcasting ? "Sending Email Blast..." : "Send Email Blast"} ↗
+            <button 
+              className="button button-submit" 
+              type="submit" 
+              disabled={isBroadcasting || isTesting}
+            >
+              {isBroadcasting ? "Sending Broadcast..." : "Send Email Blast"} ↗
             </button>
           </form>
         </div>
