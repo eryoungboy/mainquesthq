@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import Link from "next/link";
 import { signOutAction } from "../actions";
 import { sendEmailBroadcastAction, sendTestEmailAction } from "@/app/admin/email/actions";
@@ -52,6 +52,60 @@ export default function EmailBroadcastPage() {
     }
     setMessageHtml(prev => prev + placeholder);
   };
+
+  const insertFlyer = () => {
+    const flyerUrl = "https://mainquesthq.com/og-image.jpg";
+    if (quillRef.current) {
+      try {
+        const editor = quillRef.current.getEditor();
+        const range = editor.getSelection();
+        const position = range ? range.index : editor.getLength();
+        editor.insertEmbed(position, "image", flyerUrl);
+        editor.setSelection(position + 1);
+        const html = editor.root.innerHTML;
+        setMessageHtml(html);
+        return;
+      } catch (e) {
+        // Fallback
+      }
+    }
+    setMessageHtml(prev => prev + `<p><img src="${flyerUrl}" alt="MainQuest Flyer" /></p>`);
+  };
+
+  const insertImageUrl = () => {
+    const url = window.prompt("Enter hosted image URL (e.g. https://mainquesthq.com/og-image.jpg):", "https://mainquesthq.com/og-image.jpg");
+    if (!url || !url.trim().startsWith("http")) return;
+    if (quillRef.current) {
+      try {
+        const editor = quillRef.current.getEditor();
+        const range = editor.getSelection();
+        const position = range ? range.index : editor.getLength();
+        editor.insertEmbed(position, "image", url.trim());
+        editor.setSelection(position + 1);
+        const html = editor.root.innerHTML;
+        setMessageHtml(html);
+        return;
+      } catch (e) {
+        // Fallback
+      }
+    }
+    setMessageHtml(prev => prev + `<p><img src="${url.trim()}" alt="Image" /></p>`);
+  };
+
+  const modules = useMemo(() => ({
+    toolbar: {
+      container: [
+        [{ 'header': [1, 2, 3, false] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [{'list': 'ordered'}, {'list': 'bullet'}],
+        ['link', 'image'],
+        ['clean']
+      ],
+      handlers: {
+        image: insertImageUrl
+      }
+    }
+  }), []);
 
   const handleSendTest = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -174,8 +228,17 @@ export default function EmailBroadcastPage() {
                   <button type="button" onClick={() => insertPlaceholder('{{firstName}}')} className="text-link" style={{ fontSize: "0.7rem", padding: "0.2rem 0" }}>+ First Name</button>
                   <button type="button" onClick={() => insertPlaceholder('{{lastName}}')} className="text-link" style={{ fontSize: "0.7rem", padding: "0.2rem 0" }}>+ Last Name</button>
                   <button type="button" onClick={() => insertPlaceholder('{{ticketUrl}}')} className="text-link" style={{ fontSize: "0.7rem", padding: "0.2rem 0" }}>+ Ticket URL</button>
+                  <button 
+                    type="button" 
+                    onClick={insertFlyer} 
+                    className="text-link" 
+                    style={{ fontSize: "0.75rem", padding: "0.2rem 0.5rem", color: "var(--white)", background: "var(--red)", borderRadius: "3px", textDecoration: "none" }}
+                  >
+                    🖼️ + Insert Event Flyer
+                  </button>
                 </div>
               </div>
+
               <div style={{ background: "var(--white)", border: "2px solid var(--black)", overflow: "hidden" }}>
                 {/* @ts-ignore - ReactQuill dynamic import ref */}
                 <ReactQuill 
@@ -184,17 +247,12 @@ export default function EmailBroadcastPage() {
                   value={messageHtml} 
                   onChange={setMessageHtml} 
                   style={{ minHeight: "350px", border: "none" }}
-                  modules={{
-                    toolbar: [
-                      [{ 'header': [1, 2, 3, false] }],
-                      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                      [{'list': 'ordered'}, {'list': 'bullet'}],
-                      ['link', 'image'],
-                      ['clean']
-                    ],
-                  }}
+                  modules={modules}
                 />
               </div>
+              <p style={{ fontSize: "0.75rem", color: "#666", marginTop: "0.5rem", marginBottom: 0 }}>
+                💡 <strong>Tip:</strong> Click <strong>+ Insert Event Flyer</strong> to embed the official poster into your email. Images in emails must use web links (Base64 file uploads are blocked by Gmail/Outlook).
+              </p>
             </div>
 
             {/* TEST EMAIL CARD */}
@@ -203,7 +261,7 @@ export default function EmailBroadcastPage() {
                 Send a Test Email (Preview in Inbox)
               </strong>
               <p style={{ fontSize: "0.85rem", color: "#555", margin: "0 0 1rem 0" }}>
-                Send a preview to your own email address to check the layout and formatting before blasting all recipients.
+                Send a preview to your own email address to check the layout and flyer formatting before blasting all recipients.
               </p>
               <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap", alignItems: "center" }}>
                 <input 

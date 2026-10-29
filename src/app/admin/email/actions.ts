@@ -18,7 +18,7 @@ function wrapBroadcastEmailHtml(contentHtml: string): string {
     .email-header { font-size: 24px; font-weight: 900; letter-spacing: -0.05em; color: #000000; margin-bottom: 24px; border-bottom: 2px solid #f1ecd8; padding-bottom: 12px; }
     .email-body { font-size: 16px; line-height: 1.6; color: #111111; }
     .email-body p { margin: 0 0 16px 0; }
-    .email-body img { max-width: 100%; height: auto; display: block; margin: 16px 0; border: 1px solid #e5e5e5; }
+    .email-body img { max-width: 100%; height: auto; display: block; margin: 20px auto; border-radius: 4px; border: 1px solid #000000; box-shadow: 4px 4px 0px #000000; }
     .email-body a { color: #fb1422; text-decoration: underline; font-weight: bold; }
     .email-body blockquote { border-left: 4px solid #fb1422; margin: 16px 0; padding-left: 16px; color: #555555; }
     .email-footer { margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; font-size: 12px; line-height: 1.5; color: #666666; text-align: center; }
