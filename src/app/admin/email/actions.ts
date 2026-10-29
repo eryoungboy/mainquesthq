@@ -81,6 +81,7 @@ export async function sendTestEmailAction(prevState: any, formData: FormData) {
     personalizedHtml = personalizedHtml.replace(/\{\{email\}\}/gi, testEmail);
     personalizedHtml = personalizedHtml.replace(/\{\{ticketToken\}\}/gi, "SAMPLE-TICKET-TOKEN");
     personalizedHtml = personalizedHtml.replace(/\{\{ticketUrl\}\}/gi, `${baseUrl}/ticket/sample`);
+    personalizedHtml = personalizedHtml.replace(/\{\{dpUrl\}\}/gi, `${baseUrl}/dp`);
 
     const { data, error } = await resend.emails.send({
       from: fromEmail,
@@ -138,6 +139,7 @@ export async function sendEmailBroadcastAction(prevState: any, formData: FormDat
         personalizedHtml = personalizedHtml.replace(/\{\{email\}\}/gi, reg.email);
         personalizedHtml = personalizedHtml.replace(/\{\{ticketToken\}\}/gi, reg.ticketToken);
         personalizedHtml = personalizedHtml.replace(/\{\{ticketUrl\}\}/gi, `${baseUrl}/ticket/${reg.ticketToken}`);
+        personalizedHtml = personalizedHtml.replace(/\{\{dpUrl\}\}/gi, `${baseUrl}/dp`);
 
         return {
           from: fromEmail,

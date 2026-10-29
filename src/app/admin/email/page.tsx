@@ -72,6 +72,25 @@ export default function EmailBroadcastPage() {
     setMessageHtml(prev => prev + `<p><img src="${flyerUrl}" alt="MainQuest Flyer" /></p>`);
   };
 
+  const insertCountdownFlyer = () => {
+    const flyerUrl = "https://mainquesthq.com/1-day-to-go.jpg";
+    if (quillRef.current) {
+      try {
+        const editor = quillRef.current.getEditor();
+        const range = editor.getSelection();
+        const position = range ? range.index : editor.getLength();
+        editor.insertEmbed(position, "image", flyerUrl);
+        editor.setSelection(position + 1);
+        const html = editor.root.innerHTML;
+        setMessageHtml(html);
+        return;
+      } catch (e) {
+        // Fallback
+      }
+    }
+    setMessageHtml(prev => prev + `<p><img src="${flyerUrl}" alt="1 Day To Go Flyer" /></p>`);
+  };
+
   const insertImageUrl = () => {
     const url = window.prompt("Enter hosted image URL (e.g. https://mainquesthq.com/og-image.jpg):", "https://mainquesthq.com/og-image.jpg");
     if (!url || !url.trim().startsWith("http")) return;
@@ -228,13 +247,22 @@ export default function EmailBroadcastPage() {
                   <button type="button" onClick={() => insertPlaceholder('{{firstName}}')} className="text-link" style={{ fontSize: "0.7rem", padding: "0.2rem 0" }}>+ First Name</button>
                   <button type="button" onClick={() => insertPlaceholder('{{lastName}}')} className="text-link" style={{ fontSize: "0.7rem", padding: "0.2rem 0" }}>+ Last Name</button>
                   <button type="button" onClick={() => insertPlaceholder('{{ticketUrl}}')} className="text-link" style={{ fontSize: "0.7rem", padding: "0.2rem 0" }}>+ Ticket URL</button>
+                  <button type="button" onClick={() => insertPlaceholder('{{dpUrl}}')} className="text-link" style={{ fontSize: "0.7rem", padding: "0.2rem 0", color: "var(--navy)", fontWeight: "bold" }}>+ DP Link</button>
                   <button 
                     type="button" 
                     onClick={insertFlyer} 
                     className="text-link" 
                     style={{ fontSize: "0.75rem", padding: "0.2rem 0.5rem", color: "var(--white)", background: "var(--red)", borderRadius: "3px", textDecoration: "none" }}
                   >
-                    🖼️ + Insert Event Flyer
+                    🖼️ + Main Flyer
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={insertCountdownFlyer} 
+                    className="text-link" 
+                    style={{ fontSize: "0.75rem", padding: "0.2rem 0.5rem", color: "var(--white)", background: "#111111", borderRadius: "3px", textDecoration: "none" }}
+                  >
+                    ⏳ + "1 Day To Go" Flyer
                   </button>
                 </div>
               </div>
