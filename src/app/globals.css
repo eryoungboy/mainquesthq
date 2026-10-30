@@ -84,6 +84,8 @@ h1 em, h2 em { display: inline-block; color: var(--red); font-family: Georgia, s
 .speaker-card:nth-child(2) .speaker-photo { background: var(--cyan); }
 .speaker-card:nth-child(3) .speaker-photo { background: var(--red); }
 .speaker-card:nth-child(4) .speaker-photo { background: var(--navy); }
+.speaker-card:nth-child(5) .speaker-photo { background: var(--orange); }
+.speaker-card:nth-child(6) .speaker-photo { background: var(--green); }
 .speaker-number { position: absolute; bottom: 1rem; left: 1rem; display: grid; place-items: center; width: 42px; height: 42px; background: var(--white); border: var(--border); font-weight: 900; }
 .speaker-copy { padding: clamp(1.25rem, 3vw, 2.5rem); }
 .speaker-copy h3 { font-size: clamp(1.6rem, 2.6vw, 2.5rem); line-height: 1.05; letter-spacing: -.045em; margin-bottom: 1.25rem; }

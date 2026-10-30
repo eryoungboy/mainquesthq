@@ -355,7 +355,7 @@ export default function Home() {
               <span>02</span> The speakers
             </div>
             <h2 id="speakers-title">Meet the people.<br /><em>Hear their stories.</em></h2>
-            <p>Four speakers. One stage. Meet the voices joining us for Against All Odds.</p>
+            <p>Six speakers. One stage. Meet the voices joining us for Against All Odds.</p>
           </div>
           <div className="speaker-grid">
             {speakers.map((speaker, index) => (
@@ -372,6 +372,11 @@ export default function Home() {
                 </div>
                 <div className="speaker-copy">
                   <h3 id={`${speaker.id}-name`}>{speaker.name}</h3>
+                  {(speaker as any).tagline && (
+                    <p style={{ fontStyle: "italic", fontWeight: 700, margin: "-0.5rem 0 1rem 0", color: "var(--navy)" }}>
+                      {(speaker as any).tagline}
+                    </p>
+                  )}
                   {speaker.bio.map((paragraph, paragraphIndex) => (
                     <p key={paragraphIndex}>{paragraph}</p>
                   ))}
@@ -394,7 +399,7 @@ export default function Home() {
               <div className="event-card" aria-label="Event information">
                 <p><span>Date</span><strong>October 31, 2026</strong></p>
                 <p><span>Time</span><strong>11:00 AM EST</strong></p>
-                <p><span>Format</span><strong>4 Speakers, 1 Stage</strong></p>
+                <p><span>Format</span><strong>6 Speakers, 1 Stage</strong></p>
                 <p><span>Speakers</span><strong>{speakers.map((speaker) => (
                   <a className="event-speaker" key={speaker.id} href={`#${speaker.id}-name`}>{speaker.name}</a>
                 ))}</strong></p>
@@ -558,7 +563,7 @@ export default function Home() {
             <div className="event-card" aria-label="Event information">
               <p><span>Date</span><strong>October 31, 2026</strong></p>
               <p><span>Time</span><strong>11:00 AM EST</strong></p>
-              <p><span>Format</span><strong>4 Speakers, 1 Stage</strong></p>
+              <p><span>Format</span><strong>6 Speakers, 1 Stage</strong></p>
               <p><span>Speakers</span><strong>{speakers.map((speaker) => (
                 <a className="event-speaker" key={speaker.id} href={`#${speaker.id}-name`}>{speaker.name}</a>
               ))}</strong></p>

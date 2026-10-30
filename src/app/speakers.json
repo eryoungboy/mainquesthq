@@ -40,5 +40,35 @@
     "image": "/speakers/laiza-king.png",
     "width": 380,
     "height": 470
+  },
+  {
+    "id": "jay-on-air",
+    "name": "Joseph ‘Jay On Air’ Onaolapo",
+    "bio": [
+      "Joseph Onaolapo, popularly known as Jay On Air, is a media host, content creator, actor, and platform builder passionate about shaping meaningful conversations around work, leadership, culture, and influence in Africa.",
+      "He is the Founder and Curator of the Work Culture Festival (WCF), a culture-driven platform dedicated to rethinking how people work, lead, collaborate, and build in an evolving world. Through WCF, he brings together founders, executives, creatives, HR leaders, and young professionals to foster honest, thought-provoking, and future-focused conversations about workplace culture and the people shaping it.",
+      "He is also the host of Jay On Air, a media platform where he engages industry leaders, entrepreneurs, creatives, and change-makers in insightful conversations, unpacking their stories, experiences, ideas, and perspectives. Through his work across digital and live platforms, he continues to build an audience around conversations that inspire thought, challenge perspectives, and influence culture.",
+      "His work spans event hosting and moderation, conference and experience curation, content creation, acting, and performance. Whether commanding the stage, engaging audiences on screen, or building platforms behind the scenes, Joseph brings together storytelling, creativity, and intentional conversations to create experiences that resonate.",
+      "At the heart of his work is a commitment to creating platforms and conversations that matter, amplifying voices, connecting people, and contributing to the evolving conversations shaping Africa's work, culture, and leadership landscape."
+    ],
+    "image": "/speakers/jay-on-air.png",
+    "width": 521,
+    "height": 650
+  },
+  {
+    "id": "divine-egbuna",
+    "name": "Divine Egbuna",
+    "tagline": "Creative Entrepreneur | Innovator | Builder",
+    "bio": [
+      "Divine Egbuna is a creative entrepreneur, visionary thinker and multidisciplinary professional passionate about the intersection of creativity, technology, media and human potential.",
+      "Driven by a commitment to innovation, purposeful living and meaningful impact, Divine is interested in creating platforms, experiences and opportunities that inspire people to think beyond limitations, discover their identity and unlock their potential.",
+      "His approach to leadership is rooted in the belief that success goes beyond individual achievement. It is also about building meaningful relationships, creating access, sharing knowledge and cultivating communities where people can connect, collaborate and thrive.",
+      "With a keen interest in purpose, personal development, entrepreneurship and social capital, Divine is passionate about challenging conventional thinking and encouraging people to take ownership of their journeys, regardless of the odds stacked against them.",
+      "At the heart of his work is a simple conviction: that everyone has a purpose worth pursuing, a story worth telling and a contribution worth making.",
+      "Divine Egbuna is a Lead for MainQuest HQ, where he contributes to building a platform centred on purpose, identity, meaningful connections and empowering individuals to pursue their potential against all odds."
+    ],
+    "image": "/speakers/divine-egbuna.png",
+    "width": 392,
+    "height": 650
   }
 ]
